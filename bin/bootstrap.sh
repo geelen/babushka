@@ -10,9 +10,11 @@ then
   to="$HOME/.babushka/temporary_bootstrap_install"
 fi
 
-if [ -z "$opts" ]
+if [ -z "$headless" ]
 then
   opts=""
+else
+  opts="--defaults"
 fi
 
 function true_with { echo "$1"; true; }
@@ -47,8 +49,14 @@ function welcome {
     echo "You don't have ruby installed, so we'll take care of that first (using apt)."
   fi
   echo ""
-  read -p "Sound good? [y/N] " f
-  [[ "$f" == y* ]]
+  
+  if [ -z "$headless" ]
+  then
+    read -p "Sound good? [y/N] " f
+    [[ "$f" == y* ]]
+  else
+    true
+  fi
 }
 
 function install_ruby_if_required {
