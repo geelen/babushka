@@ -1,7 +1,19 @@
 #!/bin/bash
 
-from="http://github.com/benhoskings/babushka/tarball/master"
-to="$HOME/.babushka/temporary_bootstrap_install"
+if [ -z "$from" ]
+then
+  from="http://github.com/benhoskings/babushka/tarball/master"
+fi
+
+if [ -z "$to" ]
+then
+  to="$HOME/.babushka/temporary_bootstrap_install"
+fi
+
+if [ -z "$opts" ]
+then
+  opts=""
+fi
 
 function true_with { echo "$1"; true; }
 function false_with { echo "$1"; false; }
@@ -77,7 +89,7 @@ function stream_tarball {
 
 function handle_install {
   echo ""
-  ruby "$to/bin/babushka.rb" --defaults meet 'babushka'
+  ruby "$to/bin/babushka.rb" "$opts" meet 'babushka'
   [ $? -eq 0 ]
 }
 
