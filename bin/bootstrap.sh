@@ -89,7 +89,7 @@ function stream_tarball {
 
 function handle_install {
   echo ""
-  ruby "$to/bin/babushka.rb" "$opts" meet 'babushka'
+  ruby "$to/bin/babushka.rb" meet 'babushka' "$opts"
   [ $? -eq 0 ]
 }
 
