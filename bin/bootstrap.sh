@@ -10,13 +10,6 @@ then
   to="$HOME/.babushka/temporary_bootstrap_install"
 fi
 
-if [ -z "$headless" ]
-then
-  opts=""
-else
-  opts="--defaults"
-fi
-
 function true_with { echo "$1"; true; }
 function false_with { echo "$1"; false; }
 
@@ -97,7 +90,13 @@ function stream_tarball {
 
 function handle_install {
   echo ""
-  ruby "$to/bin/babushka.rb" meet 'babushka' "$opts"
+  
+  if [ -z "$headless" ]
+  then
+    ruby "$to/bin/babushka.rb" meet 'babushka'
+  else
+    ruby "$to/bin/babushka.rb" meet 'babushka' --defaults
+  fi
   [ $? -eq 0 ]
 }
 
