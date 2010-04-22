@@ -1,9 +1,6 @@
 #!/bin/bash
 
-if [ -z "$from" ]
-then
-  from="http://github.com/benhoskings/babushka/tarball/master"
-fi
+from="http://github.com/benhoskings/babushka/tarball/master"
 
 if [ -z "$to" ]
 then
@@ -42,7 +39,7 @@ function welcome {
     echo "You don't have ruby installed, so we'll take care of that first (using apt)."
   fi
   echo ""
-  
+
   if [ -z "$headless" ]
   then
     read -p "Sound good? [y/N] " f
@@ -90,7 +87,7 @@ function stream_tarball {
 
 function handle_install {
   echo ""
-  
+
   if [ -z "$headless" ]
   then
     ruby "$to/bin/babushka.rb" meet 'babushka'
