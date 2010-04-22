@@ -207,6 +207,7 @@ def render_erb_in_memory erb, opts = {}
 end
 
 def render_erb erb, opts = {}
+  require 'erb'
   rendered = ERB.new(IO.read(path)).result(binding)
   if rendered then
     returning shell("cat > #{opts[:to]}",
