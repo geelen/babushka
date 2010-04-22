@@ -124,20 +124,23 @@ def sed
 end
 
 def append_to_file text, file, opts = {}
-  if failable_shell("grep '^#{text}' #{file}").stdout.empty?
-    shell %Q{echo "# #{added_by_babushka(text.split("\n").length)}\n#{text.gsub('"', '\"')}" >> #{file}}, opts
+  if text[/\n/] || failable_shell("grep '^#{text}' #{file}").stdout.empty?
+    shell %Q{echo "#{"\n" if opts[:newline]}# #{added_by_babushka(text.split("\n").length)}\n#{text.gsub('"', '\"')}" >> #{file}}, opts
   end
 end
 
 def _by_babushka
   "by babushka-#{Babushka::VERSION} at #{Time.now}"
 end
+
 def generated_by_babushka
   "Generated #{_by_babushka}"
 end
+
 def edited_by_babushka
   "This line edited #{_by_babushka}"
 end
+
 def added_by_babushka nlines
   if nlines == 1
     "This line added #{_by_babushka}"
@@ -185,21 +188,30 @@ def confirm message, opts = {}, &block
 end
 
 require 'yaml'
+
 def yaml path
   YAML.load_file path.p
 end
 
-def render_erb erb, opts = {}
+def render_erb_in_memory erb, opts = {}
   if (path = erb_path_for(erb)).nil?
     log_error "If you use #render_erb within a dynamically defined dep, you have to give the full path to the erb template."
   elsif !File.exists?(path) && !opts[:optional]
     log_error "Couldn't find erb to render at #{path}."
   elsif File.exists?(path)
     require 'erb'
-    debug ERB.new(IO.read(path)).result(binding)
+    result = ERB.new(IO.read(path)).result(binding)
+    debug result
+    result
+  end
+end
+
+def render_erb erb, opts = {}
+  rendered = ERB.new(IO.read(path)).result(binding)
+  if rendered then
     returning shell("cat > #{opts[:to]}",
-      :input => ERB.new(IO.read(path)).result(binding),
-      :sudo => opts[:sudo]
+                    :input => rendered,
+                    :sudo => opts[:sudo]
     ) do |result|
       if result
         log "Rendered #{opts[:to]}."
