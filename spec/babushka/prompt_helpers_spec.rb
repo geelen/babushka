@@ -18,6 +18,18 @@ describe "prompt_for_value" do
     end
   end
 
+  describe "with blank" do
+    it "should allow blank variables" do
+      @value = ''
+      prompt_for_value('value', :blank => true).should == nil #should this be a BLANK constant
+    end
+
+    it "should fail if variable is blank but shouldn't be" do
+      @value = ''
+      prompt_for_value('value').should == nil #ARGH
+    end
+  end
+
   describe "with choices" do
     it "should accept a valid choice" do
       @value = 'a'

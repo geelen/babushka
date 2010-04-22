@@ -77,7 +77,7 @@ module Babushka
             "That's not a valid choice"
           elsif block_given? && !yield(value)
             opts[:retry]
-          elsif value.blank? && !(opts[:default] && opts[:default].empty?)
+          elsif value.blank? && !(opts[:default] && opts[:default].empty?) && !opts[:blank]
             "That was blank"
           else
             break # success

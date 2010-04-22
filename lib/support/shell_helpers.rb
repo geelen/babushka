@@ -171,8 +171,9 @@ end
 def confirm message, opts = {}, &block
   prompter = respond_to?(:var) ? :var : :prompt_for_value
   answer = send(prompter, message,
-    :message => message,
-    :default => (opts[:default] || 'y')
+                :message => message,
+                :default => (opts[:default] || 'y'),
+                :blank => opts[:blank]
   ).starts_with?('y')
 
   if block.nil?
